@@ -5,6 +5,8 @@ services:
 addons:
   postgresql: "9.4"
 before_script:
+  - cd decide
+  - cp local_settings.travis.py local_settings.py
   - psql -U postgres -c "create user decide password 'decide'"
   - psql -U postgres -c "create database test_decide owner decide"
   - psql -U postgres -c "ALTER USER decide CREATEDB"
@@ -13,9 +15,16 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
-  - pip install codacy-coverage
 script:
-  - cd decide
-  - coverage run --branch --source=. ./manage.py test --keepdb --with-xunit
-  - coverage xml
-  - python-codacy-coverage -r coverage.xml
+  - python ./manage.py test
+notifications:
+  email:
+    recipients:
+      - juanogtir@alum.us.es
+    on_success: change
+    on_failure: always
+deploy:
+  provider: heroku
+  app: juanogtir-egc-1230
+  strategy: git
+  api_key: $HEROKU_AUTH_TOKEN
