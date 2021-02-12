@@ -11,6 +11,8 @@ from .serializers import VoteSerializer
 from base import mods
 from base.models import Auth
 from base.tests import BaseTestCase
+
+from base.mods import register_status
 from census.models import Census
 from mixnet.models import Key
 from voting.models import Question
